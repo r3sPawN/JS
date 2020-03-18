@@ -27,7 +27,7 @@ class Snake {
     calculateSnakeBody(direction, snakeBody) { 
         
         if(DIRECTIONS.UP !== direction && DIRECTIONS.UP !== direction
-             && DIRECTIONS.LEFT !== direction && DIRECTIONS.RIGHT !== direction) { // or does not work - check why
+             && DIRECTIONS.LEFT !== direction && DIRECTIONS.RIGHT !== direction) { 
             throw "wrong input";    
         }
 
@@ -59,8 +59,7 @@ class Snake {
         newSnakeBody.push(newHead);
 
         return newSnakeBody;
-    }
-      
+    }  
 }
 
 class Board {
@@ -81,21 +80,20 @@ class Board {
         throw "the snake hit a wall";
     }
     
-    for (let i = 0; i < this.snake.snakeBody.length; i++) { // make it with foreach or map
-            board[this.snake.snakeBody[i].x][this.snake.snakeBody[i].y] = "x";
-        }
-    board[this.applePosition[0].x][this.applePosition[0].y] = "A";
-    
+    this.snake.snakeBody.forEach((element) => {
+        board[element.x][element.y] = "x"; 
+    });
 
+    board[this.applePosition[0].x][this.applePosition[0].y] = "A";
+ 
     console.info(board);
     console.log("___________________");
     }
 }
-    // class Apple - when the apple is eaten snake size++, random possition
 
 class Apple {
-    constructor(snakePosition) {
-        this.snakePosition = snakePosition;
+    constructor(snakeBody) {
+        this.snakeBody = snakeBody;
         this.applePosition = this.setApplePosition();
     }
 
@@ -103,24 +101,23 @@ class Apple {
         let randomX = Math.floor(Math.random() * BOARD_DIMENSIONS[0]);
         let randomY = Math.floor(Math.random() * BOARD_DIMENSIONS[1]);
         
-        let ApplePosition = [{x: 0 , y: 8}]; // randomx, randomY
+        let ApplePosition = [{x: randomX , y: randomY}]; // randomx, randomY
         
-        if(this.snakePosition.some(element => 
-            element.x === ApplePosition[0].x && element.y === ApplePosition[0].y)) { //make it work; it can spawn on the snake again
-                ApplePosition[0].x = ApplePosition[0].x % 2;
-                ApplePosition[0].y = ApplePosition[0].y % 2;
+        if(this.snakeBody.some(element => 
+            element.x === ApplePosition[0].x && element.y === ApplePosition[0].y)) { 
+                this.setApplePosition();
             }
         
         return ApplePosition;
     }
 
     checkForCollision() {
-        let newSnakeBody = this.snakePosition.slice();   
+        let newSnakeBody = this.snakeBody.slice();   
         let snakeHead = newSnakeBody.pop();
         let newHead = Object.assign({}, snakeHead);
         
         let Tail = newSnakeBody.shift();
-        let changeSnakeSize = this.snakePosition; //this.snakeBody
+        let changeSnakeSize = this.snakeBody;
         
         //this is a new function that check for iscollied; returns true or false
         if (this.applePosition.some((element, index) =>  
@@ -147,7 +144,7 @@ class Game {
         
         for (let index = 0; index < 9; index++) {
         this.snake.move(this.lastdirection);
-        apple.snakePosition = this.snake.snakeBody;
+        apple.snakeBody = this.snake.snakeBody;
         this.snake.snakeBody = apple.checkForCollision();
         let board1 = new Board(this.snake, BOARD_DIMENSIONS, apple.applePosition);
         board1.render();
@@ -157,7 +154,6 @@ class Game {
 
         //git repo named snake; JSlinter make it work; Jest testing - one test
     }
-
 }
 
 game = new Game;
