@@ -9,16 +9,8 @@ const DIRECTIONS = {
 
 class Snake {
     constructor(snakeSize) {
-        this.snakeBody = this.createSnake(snakeSize);
+        this.snakeBody = [...new Array(snakeSize)].map((element,index) => {return {x: 0, y: index}});
     }
-
-    createSnake(size) { //make it with map and add it at the constructor 
-        let snakeArray = [];
-        for (let index = 0; index < size; index++) {
-            snakeArray.push({x:0, y:index}); 
-        }
-        return snakeArray;
-    }   
 
     move(direction) {
         this.snakeBody = this.calculateSnakeBody(direction, this.snakeBody);
@@ -105,28 +97,24 @@ class Apple {
         
         if(this.snakeBody.some(element => 
             element.x === ApplePosition[0].x && element.y === ApplePosition[0].y)) { 
-                this.setApplePosition();
+                this.applePosition = [{x: 2 , y: 8}];
             }
         
         return ApplePosition;
     }
 
-    checkForCollision() {
+    isCollided() {
         let newSnakeBody = this.snakeBody.slice();   
         let snakeHead = newSnakeBody.pop();
         let newHead = Object.assign({}, snakeHead);
-        
-        let Tail = newSnakeBody.shift();
-        let changeSnakeSize = this.snakeBody;
-        
-        //this is a new function that check for iscollied; returns true or false
+
         if (this.applePosition.some((element, index) =>  
         this.applePosition[index].x === newHead.x && this.applePosition[index].y === newHead.y)) {
-            this.applePosition  = this.setApplePosition();
-            changeSnakeSize.unshift(Tail);
+            return true;
         }
-        
-        return changeSnakeSize;       
+        else {
+            return false;
+        }
     }
 }
 
@@ -145,7 +133,12 @@ class Game {
         for (let index = 0; index < 9; index++) {
         this.snake.move(this.lastdirection);
         apple.snakeBody = this.snake.snakeBody;
-        this.snake.snakeBody = apple.checkForCollision();
+        if(apple.isCollided()) {
+            apple.setApplePosition();
+            let newSnakeBody = this.snake.snakeBody.slice();
+            let Tail = newSnakeBody.shift();
+            this.snake.snakeBody.unshift(Tail);
+        }
         let board1 = new Board(this.snake, BOARD_DIMENSIONS, apple.applePosition);
         board1.render();
         }
@@ -155,4 +148,4 @@ class Game {
 }
 
 game = new Game;
-game.start();
+game.start();                                           
