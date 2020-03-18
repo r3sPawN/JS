@@ -126,11 +126,12 @@ class Game {
         this.isGameOver = false;
     }
 
-    start() {
+
+    async start() {
         // while loop, which constantly inputs to the board the last user direction, sleep 1 sec on each ittearition
         let apple = new Apple(this.snake.snakeBody);
         
-        for (let index = 0; index < 9; index++) {
+        while(true) {
         this.snake.move(this.lastdirection);
         apple.snakeBody = this.snake.snakeBody;
         if(apple.isCollided()) {
@@ -141,6 +142,8 @@ class Game {
         }
         let board1 = new Board(this.snake, BOARD_DIMENSIONS, apple.applePosition);
         board1.render();
+
+        await new Promise(r=>setTimeout(r,1000));
         }
 
         //git repo named snake; JSlinter make it work; Jest testing - one test
