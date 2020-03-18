@@ -149,8 +149,6 @@ class Game {
         let board1 = new Board(this.snake, BOARD_DIMENSIONS, apple.applePosition);
         board1.render();
         }
-        //initial position of apple to be at the end of the board, so that the snake can take it and after that collide with the board walls 
-        //game over after the snake self eats or has no where to go 
 
         //git repo named snake; JSlinter make it work; Jest testing - one test
     }
