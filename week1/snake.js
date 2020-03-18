@@ -97,7 +97,7 @@ class Apple {
         
         if(this.snakeBody.some(element => 
             element.x === ApplePosition[0].x && element.y === ApplePosition[0].y)) { 
-                this.applePosition = [{x: 2 , y: 8}];
+                this.setApplePosition();
             }
         
         return ApplePosition;
